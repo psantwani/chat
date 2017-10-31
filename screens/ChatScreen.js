@@ -28,6 +28,7 @@ class ChatScreen extends Component{
         });
     }
 
+    //TODO: Continue from here.
     render(){
         <View>
             <ScrollView>
