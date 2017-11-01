@@ -4,14 +4,13 @@ import Card from "./Card";
 import Bubble from "./Bubble";
 import CardSection from "./CardSection";
 
-export default class ChatListItem extends Component {
+export default class ContactListItem extends Component {
     render() {
         // const { name, thumbnail_image, unread_messages, last_message, onChatSelect } = this.props.item;
         
-        const { title, thumbnail_image, url } = this.props.item;
+        const { title, thumbnail_image } = this.props.item;
         const proxy = {
-            name: title,            
-            last_message: url
+            name: title            
         };
 
         const { thumbnailStyle, headerContentStyle, thumbnailContainerStyle, headerTextStyle } = styles;
@@ -24,14 +23,9 @@ export default class ChatListItem extends Component {
                             <Image style={thumbnailStyle} source={{ uri: thumbnail_image }} />
                         </View>
                         <View style={headerContentStyle}>
-                            <Text style={headerTextStyle}>{proxy.name}</Text>
-                            <Text>{proxy.last_message}</Text>
+                            <Text style={headerTextStyle}>{proxy.name}</Text>                            
                         </View>
-                    </CardSection>
-                    <CardSection>
-                        {/* <Bubble>{unread_messages}</Bubble> */}
-                        <Bubble>1</Bubble>
-                    </CardSection>
+                    </CardSection>                    
                 </Card>
             </TouchableOpacity>
         );

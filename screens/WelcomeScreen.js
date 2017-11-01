@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { AppLoading } from 'expo';
 import React, { Component } from 'react';
 import { View, Text, AsyncStorage } from 'react-native';
@@ -10,10 +11,13 @@ class WelcomeScreen extends Component{
     }
 
     async componentWillMount(){
+        
+        await AsyncStorage.setItem('login_token', 'Piyush'); //TODO: Remove this later.
+
         let token = await AsyncStorage.getItem('login_token');
 
         if(token){
-            this.props.navigation.navigate('main');
+            this.props.navigation.navigate('chats');
             this.setState({ token });
         } else {
             this.setState({ token: false });
