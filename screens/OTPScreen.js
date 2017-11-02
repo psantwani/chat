@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { View, Text, TextInput, AsyncStorage } from 'react-native';
 import { Button } from 'react-native-elements';
 
+const BASE_URL = 'https://us-central1-chat-49f98.cloudfunctions.net';
+
 class OTPScreen extends Component {
 
     state = {
@@ -24,10 +26,10 @@ class OTPScreen extends Component {
     async confirmOTP() {
 
         const { otp } = this.state;
-        const CONFIRM_OTP_URL = '';
-        const response = await axios.get(CONFIRM_OTP_URL, this.props.mobile);
+        const CONFIRM_OTP_URL = `${BASE_URL}/`;
+        const response = await axios.get(CONFIRM_OTP_URL, { phone: this.props.mobile, code: otp });
 
-        if(response.status === 200){
+        if(response){
             if( otp === response.otp ){
                 AsyncStorage.setItem('login_token', 'Secret value'); //should be in try/catch too.
                 this.props.navigation.navigate('main', {user: response._id});

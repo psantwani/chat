@@ -5,7 +5,7 @@ module.exports = function(req, res) {
     return res.status(422).send({ error: 'Phone and code must be provided'});
   }
 
-  const phone = String(req.body.phone).replace(/[^\d]/g, '');
+  const phone = String(req.body.phone);
   const code = parseInt(req.body.code);
 
   admin.auth().getUser(phone)

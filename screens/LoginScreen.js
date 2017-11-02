@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { View, Text, TextInput } from 'react-native';
 import { Button } from 'react-native-elements';
 
+const BASE_URL = 'https://us-central1-chat-49f98.cloudfunctions.net';
+
 class LoginScreen extends Component{
 
     state = {
@@ -23,15 +25,26 @@ class LoginScreen extends Component{
 
     async generateOTP(){
         const { mobile, error } = this.state;
-        const GENERATE_OTP_URL = '';
-        const response = await axios.post(GENERATE_OTP_URL, { mobile });
+        const CREATE_USER_URL = `${BASE_URL}/createUser`;
+        const GENERATE_OTP_URL = `${BASE_URL}/requestOneTimePassword`;
         
-        if(response.status === 200){
+        const userResponse = await axios.post(CREATE_USER_URL, { phone: mobile });
+        
+        if(!userResponse.uid && userResponse.error.code !== 'auth/uid-already-exists'){
+            this.setState({
+                error: userResponse.error.message
+            });
+            return;
+        }
+        
+        const generateOtpResponse = await axios.post(GENERATE_OTP_URL, { phone: mobile });
+        
+        if(generateOtpResponse){
             this.props.navigation.navigate('otp', { mobile });
         }
         else{
             this.setState({
-                error: response.error
+                error: generateOtpResponse.error.message
             });
         }
     }
