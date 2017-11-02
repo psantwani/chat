@@ -7,7 +7,8 @@ module.exports = function(req, res) {
   }
 
   // Format the phone number to remove dashes and parens
-  const phone = String(req.body.phone).replace(/[^\d]/g, "");
+  //const phone = String(req.body.phone).replace(/[^\d]/g, "");
+  const phone = String(req.body.phone);
 
   // Create a new user account using that phone number
   admin.auth().createUser({ uid: phone })
