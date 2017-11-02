@@ -2,13 +2,13 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { View, Text, TextInput } from 'react-native';
 import { Button } from 'react-native-elements';
-
-const BASE_URL = 'https://us-central1-chat-49f98.cloudfunctions.net';
+import { FIREBASE_ROOT_URL } from '../services';
+import C from '../lib/constants';
 
 class LoginScreen extends Component{
 
     state = {
-        mobile: '+91',
+        mobile: C.COUNTRY_CODE,
         disabledButton: true,
         error: null
     }
@@ -24,29 +24,36 @@ class LoginScreen extends Component{
     }
 
     async generateOTP(){
+        
         const { mobile, error } = this.state;
-        const CREATE_USER_URL = `${BASE_URL}/createUser`;
-        const GENERATE_OTP_URL = `${BASE_URL}/requestOneTimePassword`;
+        const CREATE_USER_URL = `${FIREBASE_ROOT_URL}/createUser`;
+        const GENERATE_OTP_URL = `${FIREBASE_ROOT_URL}/requestOneTimePassword`;
         
-        const userResponse = await axios.post(CREATE_USER_URL, { phone: mobile });
-        
-        if(!userResponse.uid && userResponse.error.code !== 'auth/uid-already-exists'){
+        try{
+            await axios.post(CREATE_USER_URL, { phone: mobile });
+        }
+        catch(err){
+            const { code, message } = err.response.data.error;
+            if(code !== "auth/uid-already-exists"){
+                this.setState({
+                    error: message
+                });
+                return;
+            }
+        }
+
+        try{
+            await axios.post(GENERATE_OTP_URL, { phone: mobile });
+            this.props.navigation.navigate('otp', { mobile });
+        }
+        catch(err){
+            const { code, message } = err.response.data.error;
             this.setState({
-                error: userResponse.error.message
+                error: message
             });
             return;
         }
-        
-        const generateOtpResponse = await axios.post(GENERATE_OTP_URL, { phone: mobile });
-        
-        if(generateOtpResponse){
-            this.props.navigation.navigate('otp', { mobile });
-        }
-        else{
-            this.setState({
-                error: generateOtpResponse.error.message
-            });
-        }
+
     }
 
     render(){
@@ -56,12 +63,13 @@ class LoginScreen extends Component{
                 <Text>We need to confirm your mobile number</Text>
                 <TextInput 
                     value={ mobile }
+                    keyboardType='numeric'
                     onChangeText= { text => this.onMobileTextChange(text) }
                 />
                 <Button 
                     title="GENERATE OTP"
-                    disabled={ disabledButton }
-                    onPress={ () => this.generateOTP }
+                    disabled= { disabledButton }
+                    onPress={ () => this.generateOTP() }
                 />
             </View>
         );

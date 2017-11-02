@@ -4,6 +4,8 @@ import { View, Text, ListView } from "react-native";
 import ContactListItem from "../components/ContactListItem";
 
 class ContactListScreen extends Component {
+
+  /**
   state = {
     contacts: []
   };
@@ -36,6 +38,16 @@ class ContactListScreen extends Component {
             dataSource={this.dataSource}
             renderRow={this.renderRow}
       />
+    );
+  }
+
+   */
+
+  render(){
+    return(
+      <View>
+        <Text>Contacts</Text>
+      </View>
     );
   }
 }

@@ -3,6 +3,7 @@ import { AppLoading } from 'expo';
 import React, { Component } from 'react';
 import { View, Text, AsyncStorage } from 'react-native';
 import { Button } from "react-native-elements";
+import C from '../lib/constants';
 
 class WelcomeScreen extends Component{
 
@@ -11,10 +12,8 @@ class WelcomeScreen extends Component{
     }
 
     async componentWillMount(){
-        
-        await AsyncStorage.setItem('login_token', 'Piyush'); //TODO: Remove this later.
-
-        let token = await AsyncStorage.getItem('login_token');
+    
+        let token = await AsyncStorage.getItem(C.TOKEN_NAME);
 
         if(token){
             this.props.navigation.navigate('chats');
