@@ -1,7 +1,9 @@
 import _ from "lodash";
+import firebase from 'firebase';
 import React, { Component } from "react";
 import { Platform, StatusBar, View } from 'react-native';
 import { TabNavigator, StackNavigator } from "react-navigation";
+import { FIREBASE_CONFIG } from './lib/config';
 import {
   WelcomeScreen,
   LoginScreen,
@@ -13,6 +15,11 @@ import {
 } from "./screens";
 
 export default class App extends Component {
+
+  componentWillMount() {    
+    firebase.initializeApp(FIREBASE_CONFIG);
+  }
+
   render() {
     const MainNavigator = TabNavigator(
       {

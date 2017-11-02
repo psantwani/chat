@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { View, Text, TextInput, AsyncStorage } from 'react-native';
 import { Button } from 'react-native-elements';
-import { FIREBASE_ROOT_URL } from '../services';
+import { FIREBASE_ROOT_URL } from '../lib/config';
 import C from '../lib/constants';
 
 class OTPScreen extends Component {

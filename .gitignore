@@ -1,4 +1,4 @@
 node_modules/
 service_account.json
 twilio.js
-services/index.js
+lib/config.js
