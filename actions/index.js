@@ -1,4 +1,6 @@
 import firebase from 'firebase';
+import _ from 'lodash';
+import { Contacts, Permissions } from 'expo';
 
 export const sendMessage = async (chatId = null, message, recipient = null) => {
     const { currentUser } = firebase.auth();
@@ -77,4 +79,38 @@ const fetchActiveChats = () => {
     });
 }
 
-const 
+const fetchMessages = (chatUid) => {
+    firebase.database().ref(`/chats/${chatUid}/messages`)
+    .on('value', snapshot => {
+        console.log('Fetched messages');
+        console.log(snapshot.val());
+    });
+}
+
+const getContacts = async() => {
+    const permission = await Permissions.askAsync(Expo.Permissions.CONTACTS);
+    if (permission.status !== 'granted') {      
+      return;
+    }
+    
+    const { data } = await Contacts.getContactsAsync({
+        fields: [
+            Expo.Contacts.PHONE_NUMBERS
+        ],
+    });
+
+    const users = await fetchUsers();
+    const databaseRef =  firebase.database().ref(`/users`);
+
+    const contactPromises = _.map(data, ({name, phoneNumbers}) => {
+        return databaseRef.child(phoneNumbers[0]).on('value', s => s);
+    });
+
+    Promise.all(contactPromises)
+    .then(contacts => {
+        return contacts;
+    })
+    .catch(err => {
+      console.log(err);
+    })
+}

@@ -17,5 +17,8 @@
   },
   "ios": {
     "supportsTablet": true
+  },
+  "android": {
+    "permissions": ["READ_CONTACTS"]
   }
 }

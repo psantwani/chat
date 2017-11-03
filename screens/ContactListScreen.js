@@ -2,54 +2,51 @@ import _ from "lodash";
 import React, { Component } from "react";
 import { View, Text, ListView } from "react-native";
 import ContactListItem from "../components/ContactListItem";
+import Expo from "expo"; 
 
 class ContactListScreen extends Component {
-
-  /**
-  state = {
-    contacts: []
-  };
-
+   /**
   async componentWillMount() {
-    const ACTIVE_CHATS_URL = "https://rallycoding.herokuapp.com/api/music_albums";
-    const response = await axios.get(ACTIVE_CHATS_URL, {_id: this.props.user});
-    this.setState({
-      contacts: response.data
+    Expo.Contacts.getContactsAsync()
+    const contacts = await Expo.Contacts.getContactsAsync({ 
+      "pageSize": 10,
+      "pageOffset": 0,
+      "fields": ["phoneNumbers"]
     });
-    this.createDataSource();
-  }
+    if (contacts.length > 0) {
+      Alert.alert(
+        'Your first contact is...',
+        `Name: ${contacts[0].name}\n` +
+        `Phone: ${JSON.stringify(contacts[0].phoneNumbers)}\n` +
+        `Email: ${JSON.stringify(contacts[0].emails)}`
+      );
+    }   
+    const users = await fetchUsers();
+    const databaseRef = firebase.database().ref(`/users`);
 
-  createDataSource() {
-    const ds = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2
+    const contactPromises = _.map(data, ({ name, phoneNumbers }) => {
+      console.log(name, phoneNumbers);
+      return databaseRef.child(phoneNumbers[0]).on("value", s => s);
     });
 
-    this.dataSource = ds.cloneWithRows(this.state.contacts);
+    Promise.all(contactPromises)
+      .then(contacts => {
+        return contacts;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    
   }
-
-  renderRow(employee) {
-    return <ContactListItem item={employee} />;
-  }
-
-  render() {
-    return (
-        <ListView
-            enableEmptySections
-            dataSource={this.dataSource}
-            renderRow={this.renderRow}
-      />
-    );
-  }
-
-   */
-
+ */
   render(){
     return(
       <View>
-        <Text>Contacts</Text>
+        <Text>Contacts page.</Text>
       </View>
-    );
+    )
   }
+
 }
 
-export { ContactListScreen };
+export { ContactListScreen }
